@@ -87,8 +87,23 @@
     .hint.bad { background: #fff0f0; color: var(--bad); border-color: #edcece; }
 
     .chart-wrap { height: 360px; position: relative; }
-    .k-wrap { height: 310px; position: relative; }
-    #candleChart { width: 100%; height: 100%; display: block; }
+    .range-box { background:#fbf6ee; border:1px solid var(--line); border-radius:20px; padding:16px; }
+    .range-top { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:14px; color:var(--accent-dark); }
+    .range-top span { font-size:14px; font-weight:800; }
+    .range-top strong { font-size:24px; }
+    .range-track { position:relative; height:18px; border-radius:999px; background:linear-gradient(90deg, rgba(197,114,114,.22) 0%, rgba(197,114,114,.22) 18%, rgba(95,143,114,.22) 18%, rgba(95,143,114,.22) 82%, rgba(197,114,114,.22) 82%, rgba(197,114,114,.22) 100%); border:1px solid var(--line); }
+    .range-safe { position:absolute; left:18%; width:64%; top:0; bottom:0; border-radius:999px; background:rgba(95,143,114,.18); }
+    .range-dot { position:absolute; top:50%; width:24px; height:24px; border-radius:50%; background:var(--accent); transform:translate(-50%,-50%); box-shadow:0 4px 12px rgba(93,66,39,.22); border:3px solid #fff; }
+    .range-dot.alert { background:var(--bad); }
+    .range-labels { display:flex; justify-content:space-between; margin-top:10px; color:var(--muted); font-size:12px; font-weight:700; padding:0 18%; }
+    .weekly-box { margin-top:12px; display:grid; grid-template-columns:1fr; gap:8px; }
+    @media (min-width:620px){ .weekly-box { grid-template-columns:repeat(3,1fr); } }
+    .week-card { background:#fff; border:1px solid var(--line); border-radius:18px; padding:13px; }
+    .week-card .week-title { color:var(--muted); font-size:12px; margin-bottom:6px; }
+    .week-card .week-value { font-size:20px; font-weight:900; }
+    .week-card.good { background:#edf7f0; border-color:#d4e8da; color:var(--good); }
+    .week-card.bad { background:#fff0f0; border-color:#edcece; color:var(--bad); }
+    .week-card.neutral { background:#f7f1e8; color:var(--accent-dark); }
 
     .calendar-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
     .calendar-title { margin: 0; font-size: 15px; color: var(--accent-dark); font-weight: 900; }
@@ -161,9 +176,22 @@
     </section>
 
     <section class="card" style="margin-top:14px;">
-      <h2>週體重 K 線圖</h2>
-      <div class="k-wrap"><canvas id="candleChart"></canvas></div>
-      <div class="hint">K 線：上影線/下影線＝當週最高/最低；柱體＝週初到週末變化。綠色代表週末低於週初，紅色代表週末高於週初。</div>
+      <h2>目標區間判讀</h2>
+      <div class="range-box">
+        <div class="range-top">
+          <span id="rangeStatus">--</span>
+          <strong id="rangeCurrent">-- kg</strong>
+        </div>
+        <div class="range-track">
+          <div class="range-safe"></div>
+          <div class="range-dot" id="rangeDot"></div>
+        </div>
+        <div class="range-labels">
+          <span>43 kg</span>
+          <span>48 kg</span>
+        </div>
+      </div>
+      <div class="weekly-box" id="weeklyDirectionBox"></div>
     </section>
 
     <section class="grid two" style="margin-top:14px;">
@@ -381,109 +409,61 @@
       });
     }
 
-    function groupByWeek(entries) {
-      const weeks = [];
-      let current = null;
-      entries.forEach(item => {
-        const d = new Date(item.date + "T00:00:00");
-        const monday = new Date(d);
-        monday.setDate(d.getDate() - ((d.getDay() + 6) % 7));
-        const key = toLocalDateString(monday);
-        if (!current || current.key !== key) {
-          current = { key, label: formatDate(key), values: [] };
-          weeks.push(current);
-        }
-        current.values.push(item.weight);
-      });
-      return weeks.map(w => ({
-        key: w.key,
-        label: w.label,
-        open: w.values[0],
-        close: w.values[w.values.length - 1],
-        high: Math.max(...w.values),
-        low: Math.min(...w.values)
-      }));
-    }
-
-    function renderCandles(entries) {
-      const canvas = $("candleChart");
-      const wrap = canvas.parentElement;
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = wrap.clientWidth * dpr;
-      canvas.height = wrap.clientHeight * dpr;
-      canvas.style.width = wrap.clientWidth + "px";
-      canvas.style.height = wrap.clientHeight + "px";
-      const ctx = canvas.getContext("2d");
-      ctx.scale(dpr, dpr);
-      const w = wrap.clientWidth, h = wrap.clientHeight;
-      ctx.clearRect(0, 0, w, h);
-
-      const candles = groupByWeek(entries).slice(-12);
+    function renderRangeAndWeekly(entries) {
       const target = getTarget();
-      if (!candles.length) {
-        ctx.fillStyle = "#8a7f73";
-        ctx.font = "14px -apple-system, BlinkMacSystemFont, Segoe UI";
-        ctx.fillText("資料累積後會顯示週 K 線。", 18, 42);
+      const latest = entries[entries.length - 1];
+      const status = $("rangeStatus");
+      const current = $("rangeCurrent");
+      const dot = $("rangeDot");
+      const weeklyBox = $("weeklyDirectionBox");
+
+      if (!latest) {
+        status.textContent = "尚無資料";
+        current.textContent = "-- kg";
+        dot.style.left = "50%";
+        dot.classList.remove("alert");
+        weeklyBox.innerHTML = `<div class="week-card neutral"><div class="week-title">趨勢</div><div class="week-value">先記 7 天</div></div>`;
         return;
       }
 
-      const pad = { left: 44, right: 18, top: 18, bottom: 34 };
-      const max = Math.max(...candles.map(c => c.high)) + 0.25;
-      const min = Math.min(...candles.map(c => c.low)) - 0.25;
-      const plotW = w - pad.left - pad.right;
-      const plotH = h - pad.top - pad.bottom;
-      const y = (v) => pad.top + ((max - v) / (max - min)) * plotH;
+      current.textContent = `${latest.weight.toFixed(1)} kg`;
+      const displayMin = target.min - 2;
+      const displayMax = target.max + 2;
+      let pct = ((latest.weight - displayMin) / (displayMax - displayMin)) * 100;
+      pct = Math.max(0, Math.min(100, pct));
+      dot.style.left = `${pct}%`;
 
-      // 目標區間警示帶：高於上限、低於下限淡紅；目標區間淡綠
-      if (target.max < max) {
-        ctx.fillStyle = "rgba(197, 114, 114, 0.10)";
-        ctx.fillRect(pad.left, pad.top, plotW, Math.max(0, y(target.max) - pad.top));
-      }
-      if (target.min > min) {
-        ctx.fillStyle = "rgba(197, 114, 114, 0.10)";
-        ctx.fillRect(pad.left, y(target.min), plotW, Math.max(0, pad.top + plotH - y(target.min)));
-      }
-      if (target.min > min && target.max < max) {
-        ctx.fillStyle = "rgba(95, 143, 114, 0.08)";
-        ctx.fillRect(pad.left, y(target.max), plotW, Math.max(0, y(target.min) - y(target.max)));
+      if (latest.weight > target.max) {
+        status.textContent = `高於目標上限 ${(latest.weight - target.max).toFixed(1)} kg`;
+        dot.classList.add("alert");
+      } else if (latest.weight < target.min) {
+        status.textContent = `低於目標下限 ${(target.min - latest.weight).toFixed(1)} kg`;
+        dot.classList.add("alert");
+      } else {
+        status.textContent = "目前在目標區間內";
+        dot.classList.remove("alert");
       }
 
-      ctx.strokeStyle = "#eadfce";
-      ctx.lineWidth = 1;
-      ctx.fillStyle = "#8a7f73";
-      ctx.font = "11px -apple-system, BlinkMacSystemFont, Segoe UI";
-      for (let i = 0; i <= 4; i++) {
-        const val = min + ((max - min) / 4) * i;
-        const yy = y(val);
-        ctx.beginPath(); ctx.moveTo(pad.left, yy); ctx.lineTo(w - pad.right, yy); ctx.stroke();
-        ctx.fillText(val.toFixed(1), 6, yy + 4);
+      const last7 = entries.slice(-7);
+      const prev7 = entries.slice(-14, -7);
+      const latestChange = entries.length >= 2 ? +(entries[entries.length - 1].weight - entries[entries.length - 2].weight).toFixed(1) : null;
+      const weekChange = last7.length >= 2 ? +(last7[last7.length - 1].weight - last7[0].weight).toFixed(1) : null;
+      const avgChange = prev7.length && last7.length ? +((last7.reduce((a,b)=>a+b.weight,0)/last7.length) - (prev7.reduce((a,b)=>a+b.weight,0)/prev7.length)).toFixed(1) : null;
+
+      function card(title, value) {
+        let cls = "neutral";
+        let arrow = "➡️";
+        if (value !== null && value < -0.1) { cls = "good"; arrow = "⬇️"; }
+        if (value !== null && value > 0.1) { cls = "bad"; arrow = "⬆️"; }
+        const text = value === null ? "資料不足" : `${arrow} ${value > 0 ? "+" : ""}${value.toFixed(1)} kg`;
+        return `<div class="week-card ${cls}"><div class="week-title">${title}</div><div class="week-value">${text}</div></div>`;
       }
 
-      const step = plotW / candles.length;
-      const bodyW = Math.min(30, step * 0.45);
-      candles.forEach((c, i) => {
-        const x = pad.left + step * i + step / 2;
-        const isDown = c.close <= c.open;
-        const color = isDown ? "#5f8f72" : "#c57272";
-        ctx.strokeStyle = color;
-        ctx.fillStyle = color;
-        ctx.lineWidth = 2;
-
-        ctx.beginPath(); ctx.moveTo(x, y(c.high)); ctx.lineTo(x, y(c.low)); ctx.stroke();
-
-        const top = y(Math.max(c.open, c.close));
-        const bottom = y(Math.min(c.open, c.close));
-        const bodyH = Math.max(4, bottom - top);
-        ctx.globalAlpha = 0.82;
-        ctx.fillRect(x - bodyW / 2, top, bodyW, bodyH);
-        ctx.globalAlpha = 1;
-
-        ctx.fillStyle = "#8a7f73";
-        ctx.font = "10px -apple-system, BlinkMacSystemFont, Segoe UI";
-        ctx.textAlign = "center";
-        ctx.fillText(c.label, x, h - 12);
-      });
-      ctx.textAlign = "left";
+      weeklyBox.innerHTML = [
+        card("較昨日", latestChange),
+        card("近7天", weekChange),
+        card("7日均值 vs 前7日", avgChange)
+      ].join("");
     }
 
     function changeMonth(delta) {
@@ -598,7 +578,7 @@
       $("targetMaxInput").value = target.max;
       renderStats(entries);
       renderChart(entries);
-      renderCandles(entries);
+      renderRangeAndWeekly(entries);
       renderCalendar(entries);
       renderHistory(entries);
     }
@@ -609,7 +589,7 @@
       render();
     }
 
-    window.addEventListener("resize", () => renderCandles(getEntries()));
+    
     init();
   </script>
 </body>
