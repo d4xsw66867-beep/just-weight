@@ -3,68 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Weight Trend Tracker</title>
+  <title>Just Weight</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
-      --bg: #f7f4ef;
-      --card: #ffffff;
-      --text: #252525;
-      --muted: #777;
-      --line: #e7dfd3;
-      --accent: #9c7a5b;
-      --accent-dark: #6f563f;
-      --good: #5b8c6a;
-      --warn: #b8794c;
-      --bad: #b75d5d;
-      --shadow: 0 10px 30px rgba(70, 48, 30, 0.08);
+      --bg: #f7f2ea;
+      --card: #fffdf9;
+      --text: #24211d;
+      --muted: #8a7f73;
+      --line: #eadfce;
+      --accent: #a77f5f;
+      --accent-dark: #73563f;
+      --soft: #efe4d4;
+      --good: #5f8f72;
+      --warn: #b8844e;
+      --bad: #c57272;
+      --shadow: 0 14px 36px rgba(93, 66, 39, 0.10);
     }
 
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
-      background: linear-gradient(180deg, #fbf8f2 0%, var(--bg) 100%);
-      color: var(--text);
       min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+      background: radial-gradient(circle at top, #fffdf8 0%, var(--bg) 55%, #f0e6d8 100%);
+      color: var(--text);
     }
 
     .app {
       width: min(980px, 100%);
       margin: 0 auto;
-      padding: 22px 16px 48px;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: flex-start;
-      margin-bottom: 18px;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 28px;
-      letter-spacing: -0.5px;
-    }
-
-    .subtitle {
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .pill {
-      white-space: nowrap;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: #fff;
-      color: var(--accent-dark);
-      font-size: 13px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--line);
+      padding: 18px 16px 42px;
     }
 
     .grid {
@@ -73,13 +43,12 @@
       gap: 14px;
     }
 
-    @media (min-width: 800px) {
+    @media (min-width: 820px) {
       .grid.two { grid-template-columns: 0.9fr 1.1fr; }
-      .grid.three { grid-template-columns: repeat(3, 1fr); }
     }
 
     .card {
-      background: rgba(255,255,255,0.92);
+      background: rgba(255,253,249,0.94);
       border: 1px solid var(--line);
       border-radius: 24px;
       padding: 18px;
@@ -88,22 +57,24 @@
     }
 
     .card h2 {
-      font-size: 17px;
       margin: 0 0 14px;
+      font-size: 18px;
+      letter-spacing: -0.2px;
     }
 
     label {
       display: block;
-      margin: 12px 0 6px;
+      margin: 13px 0 7px;
       color: var(--muted);
       font-size: 13px;
+      font-weight: 600;
     }
 
     input {
       width: 100%;
       border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px 14px;
+      border-radius: 17px;
+      padding: 14px 15px;
       font-size: 18px;
       outline: none;
       background: #fff;
@@ -112,26 +83,25 @@
 
     input:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 4px rgba(156, 122, 91, 0.12);
+      box-shadow: 0 0 0 4px rgba(167, 127, 95, 0.13);
     }
 
     button {
       width: 100%;
-      border: none;
-      border-radius: 16px;
-      padding: 14px 16px;
+      border: 0;
+      border-radius: 17px;
+      padding: 15px 16px;
       margin-top: 14px;
       font-size: 16px;
-      font-weight: 700;
-      color: white;
+      font-weight: 800;
+      color: #fff;
       background: var(--accent);
       cursor: pointer;
-      transition: transform 0.1s ease, opacity 0.1s ease;
     }
 
-    button:active { transform: scale(0.98); }
-    button.secondary { background: #ded2c2; color: var(--accent-dark); }
-    button.danger { background: #c47a7a; }
+    button:active { transform: scale(0.99); }
+    button.secondary { background: #ddd0bd; color: var(--accent-dark); }
+    button.danger { background: #c97b7b; color: #fff; }
 
     .stats {
       display: grid;
@@ -139,43 +109,44 @@
       gap: 10px;
     }
 
-    @media (min-width: 600px) {
+    @media (min-width: 620px) {
       .stats { grid-template-columns: repeat(4, 1fr); }
     }
 
     .stat {
-      background: #fbf8f2;
+      background: #fbf6ee;
       border: 1px solid var(--line);
-      border-radius: 18px;
+      border-radius: 19px;
       padding: 14px;
+      min-height: 84px;
     }
 
     .stat .label {
       color: var(--muted);
       font-size: 12px;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .stat .value {
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
+      font-size: 23px;
+      font-weight: 900;
+      letter-spacing: -0.6px;
     }
 
     .hint {
-      margin-top: 12px;
-      padding: 12px 14px;
-      border-radius: 16px;
+      margin-top: 13px;
+      padding: 13px 14px;
+      border-radius: 17px;
       font-size: 14px;
       line-height: 1.45;
-      background: #f6efe4;
+      background: #f6ecdf;
       color: var(--accent-dark);
-      border: 1px solid #eadac8;
+      border: 1px solid #ead8c4;
     }
 
-    .hint.good { background: #eef7f1; color: var(--good); border-color: #d6eadc; }
-    .hint.warn { background: #fff5e9; color: var(--warn); border-color: #f1dcc4; }
-    .hint.bad { background: #fff0f0; color: var(--bad); border-color: #efd0d0; }
+    .hint.good { background: #edf7f0; color: var(--good); border-color: #d4e8da; }
+    .hint.warn { background: #fff4e5; color: var(--warn); border-color: #efd8bb; }
+    .hint.bad { background: #fff0f0; color: var(--bad); border-color: #edcece; }
 
     .chart-wrap {
       height: 360px;
@@ -207,18 +178,18 @@
     }
 
     .day.empty { border: none; background: transparent; }
-    .day.down { background: #edf7f0; color: var(--good); border-color: #d8eadc; }
-    .day.up { background: #fff0f0; color: var(--bad); border-color: #efd0d0; }
-    .day.same { background: #f7f3ed; color: var(--accent-dark); }
+    .day.down { background: #edf7f0; color: var(--good); border-color: #d4e8da; }
+    .day.up { background: #fff0f0; color: var(--bad); border-color: #edcece; }
+    .day.same { background: #f7f1e8; color: var(--accent-dark); }
 
-    .day .num { font-weight: 700; font-size: 13px; }
+    .day .num { font-weight: 800; font-size: 13px; }
     .day .kg { font-size: 10px; }
 
     .history {
       display: flex;
       flex-direction: column;
       gap: 8px;
-      max-height: 260px;
+      max-height: 270px;
       overflow: auto;
     }
 
@@ -232,12 +203,12 @@
       font-size: 14px;
     }
 
-    .record strong { font-size: 16px; }
+    .record strong { font-size: 17px; }
     .muted { color: var(--muted); }
 
     .row {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
     }
 
@@ -259,17 +230,10 @@
 </head>
 <body>
   <main class="app">
-    <header>
-      <div>
-        <h1>Weight Trend</h1>
-        <p class="subtitle">只輸入體重，其他交給趨勢線判斷。</p>
-      </div>
-      <div class="pill" id="todayPill"></div>
-    </header>
-
     <section class="grid two">
       <div class="card">
         <h2>今天的紀錄</h2>
+
         <label for="dateInput">日期</label>
         <input id="dateInput" type="date" />
 
@@ -277,14 +241,15 @@
         <input id="weightInput" type="number" inputmode="decimal" step="0.1" placeholder="例如 50.8" />
 
         <label for="targetMinInput">目標區間下限 kg</label>
-        <input id="targetMinInput" type="number" inputmode="decimal" step="0.1" placeholder="例如 48" />
+        <input id="targetMinInput" type="number" inputmode="decimal" step="0.1" />
 
         <label for="targetMaxInput">目標區間上限 kg</label>
-        <input id="targetMaxInput" type="number" inputmode="decimal" step="0.1" placeholder="例如 50" />
+        <input id="targetMaxInput" type="number" inputmode="decimal" step="0.1" />
 
         <button onclick="saveEntry()">儲存 / 更新</button>
         <button class="secondary" onclick="fillDemoData()">載入範例資料</button>
         <button class="danger" onclick="clearAllData()">清空全部資料</button>
+
         <div id="message" class="hint">每天只要輸入一次體重即可。重點看 7 日與 14 日平均，不看單日波動。</div>
       </div>
 
@@ -323,8 +288,8 @@
   </main>
 
   <script>
-    const STORAGE_KEY = "weightTrendEntriesV1";
-    const TARGET_KEY = "weightTrendTargetV1";
+    const STORAGE_KEY = "weightTrendEntriesV2";
+    const TARGET_KEY = "weightTrendTargetV2";
     let chart;
 
     const $ = (id) => document.getElementById(id);
@@ -382,14 +347,12 @@
 
       const entries = getEntries();
       const existing = entries.find((item) => item.date === date);
-      if (existing) {
-        existing.weight = weight;
-      } else {
-        entries.push({ date, weight });
-      }
+      if (existing) existing.weight = weight;
+      else entries.push({ date, weight });
+
       setEntries(entries);
       $("weightInput").value = "";
-      showMessage("已儲存。看趨勢，不要被單日數字綁架。", "good");
+      showMessage("已儲存。看趨勢，不看單日波動。", "good");
       render();
     }
 
@@ -456,13 +419,13 @@
         hint.textContent = "先累積 7 天資料，趨勢會更準。";
       } else if (latest.weight > avg7 + 0.6) {
         hint.className = "hint warn";
-        hint.textContent = "今日體重明顯高於 7 日平均，較像水分/鹽分/生理期波動，不一定是變胖。";
+        hint.textContent = "今日體重明顯高於 7 日平均，較像水分、鹽分或週期波動。";
       } else if (avg7 < avg14 - 0.15) {
         hint.className = "hint good";
         hint.textContent = "7 日平均低於 14 日平均，短期趨勢正在往下。";
       } else if (avg7 > avg14 + 0.15) {
         hint.className = "hint bad";
-        hint.textContent = "7 日平均高於 14 日平均，近期趨勢偏上。先看飲水、鹽分、睡眠與週期。";
+        hint.textContent = "7 日平均高於 14 日平均，近期趨勢偏上。先檢查水分、鹽分、睡眠與週期。";
       } else {
         hint.className = "hint";
         hint.textContent = "目前趨勢大致持平。單日波動不用放大。";
@@ -597,7 +560,6 @@
 
     function init() {
       $("dateInput").value = todayString();
-      $("todayPill").textContent = todayString();
       render();
     }
 
