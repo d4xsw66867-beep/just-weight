@@ -74,6 +74,7 @@
     @media (min-width: 620px) { .stats { grid-template-columns: repeat(4, 1fr); } }
 
     .stat { background: #fbf6ee; border: 1px solid var(--line); border-radius: 19px; padding: 14px; min-height: 84px; }
+    .stat.alert { background: #fff0f0; border-color: #edcece; }
     .stat .label { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
     .stat .value { font-size: 23px; font-weight: 900; letter-spacing: -0.6px; }
 
@@ -103,6 +104,7 @@
     .day.down { background: #edf7f0; color: var(--good); border-color: #d4e8da; }
     .day.up { background: #fff0f0; color: var(--bad); border-color: #edcece; }
     .day.same { background: #f7f1e8; color: var(--accent-dark); }
+    .day.alert { background: #fff0f0; color: var(--bad); border-color: #edcece; font-weight: 900; }
     .day.selected { outline: 3px solid rgba(167,127,95,0.22); }
     .day .num { font-weight: 900; font-size: 13px; }
     .day .kg { font-size: 10px; }
@@ -167,14 +169,10 @@
     <section class="grid two" style="margin-top:14px;">
       <div class="card">
         <div class="calendar-head">
-          
-          <div class="calendar-actions">
-            <button class="secondary small" onclick="changeMonth(-1)">‹</button>
-            <button class="secondary small" onclick="goThisMonth()">本月</button>
-            <button class="secondary small" onclick="changeMonth(1)">›</button>
-          </div>
+          <button class="secondary small" onclick="changeMonth(-1)">‹</button>
+          <div id="calendarTitle" class="calendar-title"></div>
+          <button class="secondary small" onclick="changeMonth(1)">›</button>
         </div>
-        <div id="calendarTitle" class="calendar-title"></div>
         <div class="month-grid" id="calendar"></div>
         <div id="selectedDayInfo" class="hint">點月曆上的日期，可快速查看或編輯當天紀錄。</div>
       </div>
@@ -235,7 +233,18 @@
 
     function setEntries(entries) { localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); }
 
-    function getTarget() { return JSON.parse(localStorage.getItem(TARGET_KEY) || "{\"min\":48,\"max\":50}"); }
+    function getTarget() {
+      const saved = localStorage.getItem(TARGET_KEY);
+      if (!saved) return { min: 43, max: 48 };
+
+      const target = JSON.parse(saved);
+
+      // 只修正「目標區間」的舊預設值，不修正任何體重紀錄
+      if (target.min === 48) target.min = 43;
+      if (target.max === 50) target.max = 48;
+
+      return target;
+    }
     function setTarget(min, max) { localStorage.setItem(TARGET_KEY, JSON.stringify({ min, max })); }
 
     function movingAverage(entries, index, days) {
@@ -306,6 +315,7 @@
     }
 
     function renderStats(entries) {
+      const target = getTarget();
       if (!entries.length) {
         $("latestWeight").textContent = "--"; $("avg7").textContent = "--"; $("avg14").textContent = "--"; $("weeklyChange").textContent = "--";
         $("trendHint").className = "hint"; $("trendHint").textContent = "資料累積後，這裡會自動判斷趨勢。";
@@ -318,7 +328,18 @@
       const prevIndex = Math.max(0, entries.length - 8);
       const weeklyChange = +(latest.weight - entries[prevIndex].weight).toFixed(1);
 
-      $("latestWeight").textContent = latest.weight.toFixed(1);
+      const latestVal = latest.weight.toFixed(1);
+      $("latestWeight").textContent = latestVal;
+
+      // 超出目標區間標紅
+      const latestCard = $("latestWeight").closest(".stat");
+      if (latest.weight > target.max || latest.weight < target.min) {
+        $("latestWeight").style.color = "#c57272";
+        latestCard.classList.add("alert");
+      } else {
+        $("latestWeight").style.color = "";
+        latestCard.classList.remove("alert");
+      }
       $("avg7").textContent = avg7 ? avg7.toFixed(1) : "--";
       $("avg14").textContent = avg14 ? avg14.toFixed(1) : "--";
       $("weeklyChange").textContent = `${weeklyChange > 0 ? "+" : ""}${weeklyChange.toFixed(1)}`;
@@ -398,6 +419,7 @@
       ctx.clearRect(0, 0, w, h);
 
       const candles = groupByWeek(entries).slice(-12);
+      const target = getTarget();
       if (!candles.length) {
         ctx.fillStyle = "#8a7f73";
         ctx.font = "14px -apple-system, BlinkMacSystemFont, Segoe UI";
@@ -411,6 +433,20 @@
       const plotW = w - pad.left - pad.right;
       const plotH = h - pad.top - pad.bottom;
       const y = (v) => pad.top + ((max - v) / (max - min)) * plotH;
+
+      // 目標區間警示帶：高於上限、低於下限淡紅；目標區間淡綠
+      if (target.max < max) {
+        ctx.fillStyle = "rgba(197, 114, 114, 0.10)";
+        ctx.fillRect(pad.left, pad.top, plotW, Math.max(0, y(target.max) - pad.top));
+      }
+      if (target.min > min) {
+        ctx.fillStyle = "rgba(197, 114, 114, 0.10)";
+        ctx.fillRect(pad.left, y(target.min), plotW, Math.max(0, pad.top + plotH - y(target.min)));
+      }
+      if (target.min > min && target.max < max) {
+        ctx.fillStyle = "rgba(95, 143, 114, 0.08)";
+        ctx.fillRect(pad.left, y(target.max), plotW, Math.max(0, y(target.min) - y(target.max)));
+      }
 
       ctx.strokeStyle = "#eadfce";
       ctx.lineWidth = 1;
@@ -520,6 +556,11 @@
           else if (diff > 0.1) el.classList.add("up");
           else el.classList.add("same");
         } else if (item) el.classList.add("same");
+
+        const target = getTarget();
+        if (item && (item.weight > target.max || item.weight < target.min)) {
+          el.classList.add("alert");
+        }
 
         el.innerHTML = `<div class="num">${day}</div>${item ? `<div class="kg">${item.weight.toFixed(1)}</div>` : ""}`;
         el.onclick = () => selectCalendarDate(dateStr);
