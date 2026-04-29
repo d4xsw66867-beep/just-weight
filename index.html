@@ -37,15 +37,8 @@
       padding: 18px 16px 42px;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-    }
-
-    @media (min-width: 820px) {
-      .grid.two { grid-template-columns: 0.9fr 1.1fr; }
-    }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+    @media (min-width: 820px) { .grid.two { grid-template-columns: 0.9fr 1.1fr; } }
 
     .card {
       background: rgba(255,253,249,0.94);
@@ -56,176 +49,71 @@
       backdrop-filter: blur(10px);
     }
 
-    .card h2 {
-      margin: 0 0 14px;
-      font-size: 18px;
-      letter-spacing: -0.2px;
-    }
+    .card h2 { margin: 0 0 14px; font-size: 18px; letter-spacing: -0.2px; }
 
-    label {
-      display: block;
-      margin: 13px 0 7px;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 600;
-    }
+    label { display: block; margin: 13px 0 7px; color: var(--muted); font-size: 13px; font-weight: 600; }
 
     input {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 17px;
-      padding: 14px 15px;
-      font-size: 18px;
-      outline: none;
-      background: #fff;
-      color: var(--text);
+      width: 100%; border: 1px solid var(--line); border-radius: 17px;
+      padding: 14px 15px; font-size: 18px; outline: none; background: #fff; color: var(--text);
     }
 
-    input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 4px rgba(167, 127, 95, 0.13);
-    }
+    input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(167, 127, 95, 0.13); }
 
     button {
-      width: 100%;
-      border: 0;
-      border-radius: 17px;
-      padding: 15px 16px;
-      margin-top: 14px;
-      font-size: 16px;
-      font-weight: 800;
-      color: #fff;
-      background: var(--accent);
-      cursor: pointer;
+      width: 100%; border: 0; border-radius: 17px; padding: 15px 16px; margin-top: 14px;
+      font-size: 16px; font-weight: 800; color: #fff; background: var(--accent); cursor: pointer;
     }
 
     button:active { transform: scale(0.99); }
     button.secondary { background: #ddd0bd; color: var(--accent-dark); }
     button.danger { background: #c97b7b; color: #fff; }
+    button.small { width: auto; margin: 0; padding: 8px 12px; font-size: 13px; border-radius: 12px; }
 
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
+    .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    @media (min-width: 620px) { .stats { grid-template-columns: repeat(4, 1fr); } }
 
-    @media (min-width: 620px) {
-      .stats { grid-template-columns: repeat(4, 1fr); }
-    }
-
-    .stat {
-      background: #fbf6ee;
-      border: 1px solid var(--line);
-      border-radius: 19px;
-      padding: 14px;
-      min-height: 84px;
-    }
-
-    .stat .label {
-      color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 8px;
-    }
-
-    .stat .value {
-      font-size: 23px;
-      font-weight: 900;
-      letter-spacing: -0.6px;
-    }
+    .stat { background: #fbf6ee; border: 1px solid var(--line); border-radius: 19px; padding: 14px; min-height: 84px; }
+    .stat .label { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+    .stat .value { font-size: 23px; font-weight: 900; letter-spacing: -0.6px; }
 
     .hint {
-      margin-top: 13px;
-      padding: 13px 14px;
-      border-radius: 17px;
-      font-size: 14px;
-      line-height: 1.45;
-      background: #f6ecdf;
-      color: var(--accent-dark);
-      border: 1px solid #ead8c4;
+      margin-top: 13px; padding: 13px 14px; border-radius: 17px; font-size: 14px; line-height: 1.45;
+      background: #f6ecdf; color: var(--accent-dark); border: 1px solid #ead8c4;
     }
-
     .hint.good { background: #edf7f0; color: var(--good); border-color: #d4e8da; }
     .hint.warn { background: #fff4e5; color: var(--warn); border-color: #efd8bb; }
     .hint.bad { background: #fff0f0; color: var(--bad); border-color: #edcece; }
 
-    .chart-wrap {
-      height: 360px;
-      position: relative;
-    }
+    .chart-wrap { height: 360px; position: relative; }
+    .k-wrap { height: 310px; position: relative; }
+    #candleChart { width: 100%; height: 100%; display: block; }
 
-    .month-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 7px;
-    }
+    .calendar-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .calendar-title { margin: 0; font-size: 15px; color: var(--accent-dark); font-weight: 900; }
+    .calendar-actions { display: flex; gap: 8px; }
 
-    .day-name, .day {
-      text-align: center;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
+    .month-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 7px; }
+    .day-name, .day { text-align: center; font-size: 12px; color: var(--muted); }
     .day {
-      min-height: 44px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
+      min-height: 48px; border-radius: 14px; border: 1px solid var(--line); background: #fff;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer;
     }
-
-    .day.empty { border: none; background: transparent; }
+    .day.empty { border: none; background: transparent; cursor: default; }
     .day.down { background: #edf7f0; color: var(--good); border-color: #d4e8da; }
     .day.up { background: #fff0f0; color: var(--bad); border-color: #edcece; }
     .day.same { background: #f7f1e8; color: var(--accent-dark); }
-
-    .day .num { font-weight: 800; font-size: 13px; }
+    .day.selected { outline: 3px solid rgba(167,127,95,0.22); }
+    .day .num { font-weight: 900; font-size: 13px; }
     .day .kg { font-size: 10px; }
 
-    .history {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 270px;
-      overflow: auto;
-    }
-
-    .record {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--line);
-      font-size: 14px;
-    }
-
+    .history { display: flex; flex-direction: column; gap: 8px; max-height: 270px; overflow: auto; }
+    .record { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
     .record strong { font-size: 17px; }
     .muted { color: var(--muted); }
-
-    .row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .row button {
-      width: auto;
-      margin: 0;
-      padding: 9px 12px;
-      border-radius: 12px;
-      font-size: 13px;
-    }
-
-    .footer-note {
-      text-align: center;
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 20px;
-    }
+    .row { display: flex; gap: 8px; align-items: center; }
+    .row button { width: auto; margin: 0; padding: 9px 12px; border-radius: 12px; font-size: 13px; }
+    .footer-note { text-align: center; color: var(--muted); font-size: 12px; margin-top: 20px; }
   </style>
 </head>
 <body>
@@ -267,16 +155,28 @@
 
     <section class="card" style="margin-top:14px;">
       <h2>趨勢圖</h2>
-      <div class="chart-wrap">
-        <canvas id="weightChart"></canvas>
-      </div>
+      <div class="chart-wrap"><canvas id="weightChart"></canvas></div>
+    </section>
+
+    <section class="card" style="margin-top:14px;">
+      <h2>週體重 K 線圖</h2>
+      <div class="k-wrap"><canvas id="candleChart"></canvas></div>
+      <div class="hint">K 線：上影線/下影線＝當週最高/最低；柱體＝週初到週末變化。綠色代表週末低於週初，紅色代表週末高於週初。</div>
     </section>
 
     <section class="grid two" style="margin-top:14px;">
       <div class="card">
-        <h2>月曆視覺化</h2>
-        <h3 id="calendarTitle" style="margin:0 0 10px; font-size:14px; color:var(--muted);"></h3>
+        <div class="calendar-head">
+          
+          <div class="calendar-actions">
+            <button class="secondary small" onclick="changeMonth(-1)">‹</button>
+            <button class="secondary small" onclick="goThisMonth()">本月</button>
+            <button class="secondary small" onclick="changeMonth(1)">›</button>
+          </div>
+        </div>
+        <div id="calendarTitle" class="calendar-title"></div>
         <div class="month-grid" id="calendar"></div>
+        <div id="selectedDayInfo" class="hint">點月曆上的日期，可快速查看或編輯當天紀錄。</div>
       </div>
 
       <div class="card">
@@ -289,9 +189,13 @@
   </main>
 
   <script>
-    const STORAGE_KEY = "weightTrendEntriesV2";
-    const TARGET_KEY = "weightTrendTargetV2";
+    const STORAGE_KEY = "weightTrendEntriesV3";
+    const OLD_KEYS = ["weightTrendEntriesV2", "weightTrendEntriesV1"];
+    const TARGET_KEY = "weightTrendTargetV3";
+    const OLD_TARGET_KEYS = ["weightTrendTargetV2", "weightTrendTargetV1"];
     let chart;
+    let calendarDate = new Date();
+    let selectedDate = null;
 
     const $ = (id) => document.getElementById(id);
 
@@ -302,13 +206,26 @@
       return `${year}-${month}-${day}`;
     }
 
-    function todayString() {
-      return toLocalDateString(new Date());
-    }
+    function todayString() { return toLocalDateString(new Date()); }
 
     function formatDate(dateStr) {
       const d = new Date(dateStr + "T00:00:00");
       return `${d.getMonth() + 1}/${d.getDate()}`;
+    }
+
+    function migrateOldData() {
+      if (!localStorage.getItem(STORAGE_KEY)) {
+        for (const key of OLD_KEYS) {
+          const old = localStorage.getItem(key);
+          if (old) { localStorage.setItem(STORAGE_KEY, old); break; }
+        }
+      }
+      if (!localStorage.getItem(TARGET_KEY)) {
+        for (const key of OLD_TARGET_KEYS) {
+          const old = localStorage.getItem(key);
+          if (old) { localStorage.setItem(TARGET_KEY, old); break; }
+        }
+      }
     }
 
     function getEntries() {
@@ -316,17 +233,10 @@
         .sort((a, b) => a.date.localeCompare(b.date));
     }
 
-    function setEntries(entries) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-    }
+    function setEntries(entries) { localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); }
 
-    function getTarget() {
-      return JSON.parse(localStorage.getItem(TARGET_KEY) || "{\"min\":48,\"max\":50}");
-    }
-
-    function setTarget(min, max) {
-      localStorage.setItem(TARGET_KEY, JSON.stringify({ min, max }));
-    }
+    function getTarget() { return JSON.parse(localStorage.getItem(TARGET_KEY) || "{\"min\":48,\"max\":50}"); }
+    function setTarget(min, max) { localStorage.setItem(TARGET_KEY, JSON.stringify({ min, max })); }
 
     function movingAverage(entries, index, days) {
       const slice = entries.slice(Math.max(0, index - days + 1), index + 1);
@@ -341,14 +251,8 @@
       const targetMin = Number($("targetMinInput").value);
       const targetMax = Number($("targetMaxInput").value);
 
-      if (!date || !weight || weight <= 0) {
-        showMessage("請輸入有效日期與體重。", "bad");
-        return;
-      }
-
-      if (targetMin && targetMax && targetMin < targetMax) {
-        setTarget(targetMin, targetMax);
-      }
+      if (!date || !weight || weight <= 0) { showMessage("請輸入有效日期與體重。", "bad"); return; }
+      if (targetMin && targetMax && targetMin < targetMax) setTarget(targetMin, targetMax);
 
       const entries = getEntries();
       const existing = entries.find((item) => item.date === date);
@@ -356,6 +260,8 @@
       else entries.push({ date, weight });
 
       setEntries(entries);
+      selectedDate = date;
+      calendarDate = new Date(date + "T00:00:00");
       $("weightInput").value = "";
       showMessage("已儲存。看趨勢，不看單日波動。", "good");
       render();
@@ -364,12 +270,14 @@
     function deleteEntry(date) {
       const entries = getEntries().filter((item) => item.date !== date);
       setEntries(entries);
+      if (selectedDate === date) selectedDate = null;
       render();
     }
 
     function clearAllData() {
       if (!confirm("確定要清空所有體重資料嗎？")) return;
       localStorage.removeItem(STORAGE_KEY);
+      selectedDate = null;
       render();
       showMessage("資料已清空。", "warn");
     }
@@ -377,15 +285,16 @@
     function fillDemoData() {
       const base = new Date();
       const demo = [];
-      for (let i = 27; i >= 0; i--) {
+      for (let i = 55; i >= 0; i--) {
         const d = new Date(base);
         d.setDate(base.getDate() - i);
         const date = toLocalDateString(d);
-        const trend = 51.2 - (27 - i) * 0.035;
-        const noise = Math.sin(i * 1.7) * 0.25;
+        const trend = 51.8 - (55 - i) * 0.025;
+        const noise = Math.sin(i * 1.7) * 0.28 + Math.cos(i * 0.7) * 0.12;
         demo.push({ date, weight: +(trend + noise).toFixed(1) });
       }
       setEntries(demo);
+      calendarDate = new Date();
       render();
       showMessage("已載入範例資料，可先看圖表效果。", "good");
     }
@@ -398,12 +307,8 @@
 
     function renderStats(entries) {
       if (!entries.length) {
-        $("latestWeight").textContent = "--";
-        $("avg7").textContent = "--";
-        $("avg14").textContent = "--";
-        $("weeklyChange").textContent = "--";
-        $("trendHint").className = "hint";
-        $("trendHint").textContent = "資料累積後，這裡會自動判斷趨勢。";
+        $("latestWeight").textContent = "--"; $("avg7").textContent = "--"; $("avg14").textContent = "--"; $("weeklyChange").textContent = "--";
+        $("trendHint").className = "hint"; $("trendHint").textContent = "資料累積後，這裡會自動判斷趨勢。";
         return;
       }
 
@@ -413,28 +318,17 @@
       const prevIndex = Math.max(0, entries.length - 8);
       const weeklyChange = +(latest.weight - entries[prevIndex].weight).toFixed(1);
 
-      $("latestWeight").textContent = `${latest.weight.toFixed(1)}`;
+      $("latestWeight").textContent = latest.weight.toFixed(1);
       $("avg7").textContent = avg7 ? avg7.toFixed(1) : "--";
       $("avg14").textContent = avg14 ? avg14.toFixed(1) : "--";
       $("weeklyChange").textContent = `${weeklyChange > 0 ? "+" : ""}${weeklyChange.toFixed(1)}`;
 
       const hint = $("trendHint");
-      if (entries.length < 7) {
-        hint.className = "hint";
-        hint.textContent = "先累積 7 天資料，趨勢會更準。";
-      } else if (latest.weight > avg7 + 0.6) {
-        hint.className = "hint warn";
-        hint.textContent = "今日體重明顯高於 7 日平均，較像水分、鹽分或週期波動。";
-      } else if (avg7 < avg14 - 0.15) {
-        hint.className = "hint good";
-        hint.textContent = "7 日平均低於 14 日平均，短期趨勢正在往下。";
-      } else if (avg7 > avg14 + 0.15) {
-        hint.className = "hint bad";
-        hint.textContent = "7 日平均高於 14 日平均，近期趨勢偏上。先檢查水分、鹽分、睡眠與週期。";
-      } else {
-        hint.className = "hint";
-        hint.textContent = "目前趨勢大致持平。單日波動不用放大。";
-      }
+      if (entries.length < 7) { hint.className = "hint"; hint.textContent = "先累積 7 天資料，趨勢會更準。"; }
+      else if (latest.weight > avg7 + 0.6) { hint.className = "hint warn"; hint.textContent = "今日體重明顯高於 7 日平均，較像水分、鹽分或週期波動。"; }
+      else if (avg7 < avg14 - 0.15) { hint.className = "hint good"; hint.textContent = "7 日平均低於 14 日平均，短期趨勢正在往下。"; }
+      else if (avg7 > avg14 + 0.15) { hint.className = "hint bad"; hint.textContent = "7 日平均高於 14 日平均，近期趨勢偏上。先檢查水分、鹽分、睡眠與週期。"; }
+      else { hint.className = "hint"; hint.textContent = "目前趨勢大致持平。單日波動不用放大。"; }
     }
 
     function renderChart(entries) {
@@ -450,41 +344,141 @@
       if (chart) chart.destroy();
       chart = new Chart(ctx, {
         type: "line",
-        data: {
-          labels,
-          datasets: [
-            { label: "體重", data: weights, tension: 0.35, borderWidth: 2.5, pointRadius: 4 },
-            { label: "7日平均", data: avg7, tension: 0.35, borderWidth: 2.5, pointRadius: 0 },
-            { label: "14日平均", data: avg14, tension: 0.35, borderWidth: 2.5, pointRadius: 0 },
-            { label: "目標下限", data: targetMin, borderDash: [6, 6], pointRadius: 0, borderWidth: 1.5 },
-            { label: "目標上限", data: targetMax, borderDash: [6, 6], pointRadius: 0, borderWidth: 1.5 }
-          ]
-        },
+        data: { labels, datasets: [
+          { label: "體重", data: weights, tension: 0.35, borderWidth: 2.5, pointRadius: 4 },
+          { label: "7日平均", data: avg7, tension: 0.35, borderWidth: 2.5, pointRadius: 0 },
+          { label: "14日平均", data: avg14, tension: 0.35, borderWidth: 2.5, pointRadius: 0 },
+          { label: "目標下限", data: targetMin, borderDash: [6, 6], pointRadius: 0, borderWidth: 1.5 },
+          { label: "目標上限", data: targetMax, borderDash: [6, 6], pointRadius: 0, borderWidth: 1.5 }
+        ]},
         options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { position: "bottom" },
-            tooltip: { mode: "index", intersect: false }
-          },
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { position: "bottom" }, tooltip: { mode: "index", intersect: false } },
           interaction: { mode: "nearest", axis: "x", intersect: false },
-          scales: {
-            y: {
-              suggestedMin: weights.length ? Math.min(...weights, target.min) - 1 : undefined,
-              suggestedMax: weights.length ? Math.max(...weights, target.max) + 1 : undefined,
-              ticks: { callback: (value) => `${value} kg` }
-            }
-          }
+          scales: { y: { suggestedMin: weights.length ? Math.min(...weights, target.min) - 1 : undefined, suggestedMax: weights.length ? Math.max(...weights, target.max) + 1 : undefined, ticks: { callback: (value) => `${value} kg` } } }
         }
       });
     }
 
+    function groupByWeek(entries) {
+      const weeks = [];
+      let current = null;
+      entries.forEach(item => {
+        const d = new Date(item.date + "T00:00:00");
+        const monday = new Date(d);
+        monday.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+        const key = toLocalDateString(monday);
+        if (!current || current.key !== key) {
+          current = { key, label: formatDate(key), values: [] };
+          weeks.push(current);
+        }
+        current.values.push(item.weight);
+      });
+      return weeks.map(w => ({
+        key: w.key,
+        label: w.label,
+        open: w.values[0],
+        close: w.values[w.values.length - 1],
+        high: Math.max(...w.values),
+        low: Math.min(...w.values)
+      }));
+    }
+
+    function renderCandles(entries) {
+      const canvas = $("candleChart");
+      const wrap = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = wrap.clientWidth * dpr;
+      canvas.height = wrap.clientHeight * dpr;
+      canvas.style.width = wrap.clientWidth + "px";
+      canvas.style.height = wrap.clientHeight + "px";
+      const ctx = canvas.getContext("2d");
+      ctx.scale(dpr, dpr);
+      const w = wrap.clientWidth, h = wrap.clientHeight;
+      ctx.clearRect(0, 0, w, h);
+
+      const candles = groupByWeek(entries).slice(-12);
+      if (!candles.length) {
+        ctx.fillStyle = "#8a7f73";
+        ctx.font = "14px -apple-system, BlinkMacSystemFont, Segoe UI";
+        ctx.fillText("資料累積後會顯示週 K 線。", 18, 42);
+        return;
+      }
+
+      const pad = { left: 44, right: 18, top: 18, bottom: 34 };
+      const max = Math.max(...candles.map(c => c.high)) + 0.25;
+      const min = Math.min(...candles.map(c => c.low)) - 0.25;
+      const plotW = w - pad.left - pad.right;
+      const plotH = h - pad.top - pad.bottom;
+      const y = (v) => pad.top + ((max - v) / (max - min)) * plotH;
+
+      ctx.strokeStyle = "#eadfce";
+      ctx.lineWidth = 1;
+      ctx.fillStyle = "#8a7f73";
+      ctx.font = "11px -apple-system, BlinkMacSystemFont, Segoe UI";
+      for (let i = 0; i <= 4; i++) {
+        const val = min + ((max - min) / 4) * i;
+        const yy = y(val);
+        ctx.beginPath(); ctx.moveTo(pad.left, yy); ctx.lineTo(w - pad.right, yy); ctx.stroke();
+        ctx.fillText(val.toFixed(1), 6, yy + 4);
+      }
+
+      const step = plotW / candles.length;
+      const bodyW = Math.min(30, step * 0.45);
+      candles.forEach((c, i) => {
+        const x = pad.left + step * i + step / 2;
+        const isDown = c.close <= c.open;
+        const color = isDown ? "#5f8f72" : "#c57272";
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+        ctx.lineWidth = 2;
+
+        ctx.beginPath(); ctx.moveTo(x, y(c.high)); ctx.lineTo(x, y(c.low)); ctx.stroke();
+
+        const top = y(Math.max(c.open, c.close));
+        const bottom = y(Math.min(c.open, c.close));
+        const bodyH = Math.max(4, bottom - top);
+        ctx.globalAlpha = 0.82;
+        ctx.fillRect(x - bodyW / 2, top, bodyW, bodyH);
+        ctx.globalAlpha = 1;
+
+        ctx.fillStyle = "#8a7f73";
+        ctx.font = "10px -apple-system, BlinkMacSystemFont, Segoe UI";
+        ctx.textAlign = "center";
+        ctx.fillText(c.label, x, h - 12);
+      });
+      ctx.textAlign = "left";
+    }
+
+    function changeMonth(delta) {
+      calendarDate = new Date(calendarDate.getFullYear(), calendarDate.getMonth() + delta, 1);
+      renderCalendar(getEntries());
+    }
+
+    function goThisMonth() {
+      calendarDate = new Date();
+      renderCalendar(getEntries());
+    }
+
+    function selectCalendarDate(dateStr) {
+      selectedDate = dateStr;
+      const entries = getEntries();
+      const item = entries.find(e => e.date === dateStr);
+      $("dateInput").value = dateStr;
+      if (item) $("weightInput").value = item.weight;
+      else $("weightInput").value = "";
+      renderCalendar(entries);
+      const info = $("selectedDayInfo");
+      if (item) {
+        info.className = "hint good";
+        info.textContent = `${dateStr}：${item.weight.toFixed(1)} kg。已帶入上方欄位，可直接編輯。`;
+      } else {
+        info.className = "hint";
+        info.textContent = `${dateStr} 尚無紀錄。已帶入日期，可直接新增。`;
+      }
+    }
+
     function renderCalendar(entries) {
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = today.getMonth();
-      const monthNames = ["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"];
-      document.getElementById("calendarTitle").textContent = `${year} 年 ${monthNames[month]}`;
       const cal = $("calendar");
       cal.innerHTML = "";
       const names = ["日", "一", "二", "三", "四", "五", "六"];
@@ -495,7 +489,11 @@
         cal.appendChild(el);
       });
 
-      
+      const year = calendarDate.getFullYear();
+      const month = calendarDate.getMonth();
+      const monthNames = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"];
+      $("calendarTitle").textContent = `${year} 年 ${monthNames[month]}`;
+
       const first = new Date(year, month, 1);
       const last = new Date(year, month + 1, 0);
       const byDate = Object.fromEntries(entries.map((item) => [item.date, item]));
@@ -506,41 +504,35 @@
         cal.appendChild(empty);
       }
 
-      let prevWeight = null;
       for (let day = 1; day <= last.getDate(); day++) {
         const dateObj = new Date(year, month, day);
         const dateStr = toLocalDateString(dateObj);
         const item = byDate[dateStr];
+        const prevObj = new Date(year, month, day - 1);
+        const prev = byDate[toLocalDateString(prevObj)];
         const el = document.createElement("div");
         el.className = "day";
+        if (selectedDate === dateStr) el.classList.add("selected");
 
-        if (item && prevWeight !== null) {
-          const diff = +(item.weight - prevWeight).toFixed(1);
+        if (item && prev) {
+          const diff = +(item.weight - prev.weight).toFixed(1);
           if (diff < -0.1) el.classList.add("down");
           else if (diff > 0.1) el.classList.add("up");
           else el.classList.add("same");
-        } else if (item) {
-          el.classList.add("same");
-        }
+        } else if (item) el.classList.add("same");
 
         el.innerHTML = `<div class="num">${day}</div>${item ? `<div class="kg">${item.weight.toFixed(1)}</div>` : ""}`;
+        el.onclick = () => selectCalendarDate(dateStr);
         cal.appendChild(el);
-        if (item) prevWeight = item.weight;
       }
     }
 
     function renderHistory(entries) {
       const box = $("history");
-      if (!entries.length) {
-        box.innerHTML = `<div class="muted">尚無資料。</div>`;
-        return;
-      }
+      if (!entries.length) { box.innerHTML = `<div class="muted">尚無資料。</div>`; return; }
       box.innerHTML = entries.slice().reverse().map((item) => `
         <div class="record">
-          <div>
-            <div class="muted">${item.date}</div>
-            <strong>${item.weight.toFixed(1)} kg</strong>
-          </div>
+          <div><div class="muted">${item.date}</div><strong>${item.weight.toFixed(1)} kg</strong></div>
           <div class="row">
             <button class="secondary" onclick="editEntry('${item.date}', ${item.weight})">編輯</button>
             <button class="danger" onclick="deleteEntry('${item.date}')">刪除</button>
@@ -550,8 +542,11 @@
     }
 
     function editEntry(date, weight) {
+      selectedDate = date;
+      calendarDate = new Date(date + "T00:00:00");
       $("dateInput").value = date;
       $("weightInput").value = weight;
+      renderCalendar(getEntries());
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -562,15 +557,18 @@
       $("targetMaxInput").value = target.max;
       renderStats(entries);
       renderChart(entries);
+      renderCandles(entries);
       renderCalendar(entries);
       renderHistory(entries);
     }
 
     function init() {
+      migrateOldData();
       $("dateInput").value = todayString();
       render();
     }
 
+    window.addEventListener("resize", () => renderCandles(getEntries()));
     init();
   </script>
 </body>
