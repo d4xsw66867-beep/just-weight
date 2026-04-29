@@ -275,6 +275,7 @@
     <section class="grid two" style="margin-top:14px;">
       <div class="card">
         <h2>月曆視覺化</h2>
+        <h3 id="calendarTitle" style="margin:0 0 10px; font-size:14px; color:var(--muted);"></h3>
         <div class="month-grid" id="calendar"></div>
       </div>
 
@@ -294,11 +295,15 @@
 
     const $ = (id) => document.getElementById(id);
 
+    function toLocalDateString(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
     function todayString() {
-      const d = new Date();
-      const offset = d.getTimezoneOffset();
-      const local = new Date(d.getTime() - offset * 60000);
-      return local.toISOString().slice(0, 10);
+      return toLocalDateString(new Date());
     }
 
     function formatDate(dateStr) {
@@ -375,7 +380,7 @@
       for (let i = 27; i >= 0; i--) {
         const d = new Date(base);
         d.setDate(base.getDate() - i);
-        const date = d.toISOString().slice(0, 10);
+        const date = toLocalDateString(d);
         const trend = 51.2 - (27 - i) * 0.035;
         const noise = Math.sin(i * 1.7) * 0.25;
         demo.push({ date, weight: +(trend + noise).toFixed(1) });
@@ -475,6 +480,11 @@
     }
 
     function renderCalendar(entries) {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = today.getMonth();
+      const monthNames = ["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"];
+      document.getElementById("calendarTitle").textContent = `${year} 年 ${monthNames[month]}`;
       const cal = $("calendar");
       cal.innerHTML = "";
       const names = ["日", "一", "二", "三", "四", "五", "六"];
@@ -485,9 +495,7 @@
         cal.appendChild(el);
       });
 
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = today.getMonth();
+      
       const first = new Date(year, month, 1);
       const last = new Date(year, month + 1, 0);
       const byDate = Object.fromEntries(entries.map((item) => [item.date, item]));
@@ -501,7 +509,7 @@
       let prevWeight = null;
       for (let day = 1; day <= last.getDate(); day++) {
         const dateObj = new Date(year, month, day);
-        const dateStr = dateObj.toISOString().slice(0, 10);
+        const dateStr = toLocalDateString(dateObj);
         const item = byDate[dateStr];
         const el = document.createElement("div");
         el.className = "day";
